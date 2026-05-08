@@ -1,0 +1,82 @@
+using Avalonia.Media.Imaging;
+
+namespace AudioPlayer.Tags
+{
+
+    public static class TrackMetadataMethods
+    {
+        public static TrackMinimalMetadata GetTrack(string filePath)
+        {
+            var file = TagLib.File.Create(filePath);
+            TimeSpan timeSpan = file.Properties.Duration;
+            
+            TrackMinimalMetadata track = new TrackMinimalMetadata
+            {
+                TrackName = $"{file.Tag.Title}",
+                Artists = file.Tag.AlbumArtists,
+                FilePath = filePath,
+                Duration = timeSpan
+            };
+
+            return track;
+        }
+
+        public static TrackFullMetadata GetMetaData(this TrackMinimalMetadata track)
+        {
+            TagLib.File file;
+            try
+            {
+                file = TagLib.File.Create(track.FilePath);
+            }
+            catch
+            {
+                return new();
+            }
+
+
+            if (file == null)
+            {
+                return new();
+            }
+
+            var Name = file.Tag.Title;
+
+            var artist = file.Tag.AlbumArtists;
+
+            Bitmap? map = GetArt(track);
+
+            return new TrackFullMetadata
+            {
+                Title = Name,
+                Artists = artist,
+                FilePath = track.FilePath,
+                Art = map,
+            };
+        }
+
+        public static Bitmap? GetArt(this TrackMinimalMetadata data)
+        {
+            var file = TagLib.File.Create(data.FilePath);
+
+            if (file == null)
+            {
+                return null;
+            }
+
+            Bitmap art = null;
+
+            if (file.Tag.Pictures.Length > 0)
+            {
+                using (var ms = new MemoryStream(file.Tag.Pictures[0].Data.Data))
+                {
+                    var bitmap = new Bitmap(ms);
+
+                    art = bitmap;
+                }
+            }
+
+            return art;
+
+        }
+    }
+}

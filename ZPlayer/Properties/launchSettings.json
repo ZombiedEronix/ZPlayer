@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "AudioPlayer": {
+      "commandName": "Project",
+      "hotReloadEnabled": false,
+      "jsWebView2Debugging": false
+    }
+  }
+}
