@@ -1,7 +1,4 @@
-using NAudio.CoreAudioApi.Interfaces;
-using NAudio.Wave;
-
-namespace AudioPlayer
+namespace ZPlayer.AudioEngine
 {
     public interface IAudioEngine
     {
@@ -9,7 +6,6 @@ namespace AudioPlayer
 
         public bool isPlaying { get; set;}
         public bool IsInitialized { get; set;}
-
 
         public double GetPosition();
 

@@ -1,8 +1,7 @@
-﻿using System.Drawing;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using ZPlugin.Interface;
 
-namespace AudioPlayer
+namespace ZPlayer.AudioEngine
 {
     public class PluginSampleProvider : ISampleProvider
     {
@@ -15,8 +14,6 @@ namespace AudioPlayer
         }
 
         public WaveFormat WaveFormat => source.WaveFormat;
-
-
 
         public int Read(float[] buffer, int offset, int count)
         {

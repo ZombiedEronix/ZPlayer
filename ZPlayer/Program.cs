@@ -1,17 +1,39 @@
 using AudioPlayer.AvaloniaApp;
 using Avalonia;
 using System.Diagnostics;
-using System.IO.Pipes;
+using System.Windows.Forms;
+using ZPlayer.AudioEngine;
 namespace AudioPlayer;
 
-internal static class Program
+internal static partial class Program
 {
     public static Player player;
     [STAThread]
     public static void Main(string[] args)
     {
-        if (StartPipeClient(args)) return;
-        Task.Run(() => StartPipeServer("ZPlayer"));
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            var ex = (Exception)e.ExceptionObject;
+
+            string errorArgs = $"\"{ex.Message}\" \"{ex.StackTrace}\"";
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string exePath = Path.Combine(baseDir, "ZPlayerCrashHandler.exe");
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = errorArgs,
+                    UseShellExecute = true
+                });
+            }
+            catch {MessageBox.Show("Не удалось запустить обработчик сбоев.");}
+            Environment.Exit(1);
+        };
+
+        if (Pipe.StartPipeClient(args)) return;
+        Task.Run(() => Pipe.StartPipeServer("ZPlayer"));
 
         //===============================
         player = new();
@@ -21,53 +43,6 @@ internal static class Program
         //===============================
         BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
-    }
-
-
-    public static bool StartPipeClient(string[] args)
-    {
-        var current = Process.GetCurrentProcess();
-        var existing = Process.GetProcessesByName(current.ProcessName)
-                                .FirstOrDefault(p => p.Id != current.Id);
-
-        if (existing != null)
-        {
-            using (var client = new NamedPipeClientStream(".", "ZPlayer", PipeDirection.Out))
-            {
-                client.Connect(100);
-                using (var writer = new StreamWriter(client))
-                {
-                    writer.WriteLine(args[0]);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private static void StartPipeServer(string v)
-    {
-        while (true)
-        {
-            using (var server = new NamedPipeServerStream("ZPlayer", PipeDirection.In))
-            {
-                server.WaitForConnection();
-                using (var reader = new StreamReader(server))
-                {
-                    var filePath = reader.ReadLine();
-                    if (!string.IsNullOrEmpty(filePath))
-                    {
-                        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
-                        {
-                            ((App)Application.Current).playerWindow.Stop();
-                            player.ClearPlaylist();
-                            player.AddTrackInPlaylist(filePath);
-                            ((App)Application.Current).playerWindow.Play(null, null);
-                        });
-                    }
-                }
-            }
-        }
     }
 
     public static AppBuilder BuildAvaloniaApp()

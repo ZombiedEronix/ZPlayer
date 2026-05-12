@@ -1,5 +1,5 @@
 using AudioPlayer.Tags;
-namespace AudioPlayer
+namespace ZPlayer.AudioEngine
 {
     public class Player
     {

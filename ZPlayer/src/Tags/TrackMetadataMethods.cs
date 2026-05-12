@@ -10,11 +10,25 @@ namespace AudioPlayer.Tags
             var file = TagLib.File.Create(filePath);
             TimeSpan timeSpan = file.Properties.Duration;
             
+
+            Bitmap art = null;
+
+            if (file.Tag.Pictures.Length > 0)
+            {
+                using (var ms = new MemoryStream(file.Tag.Pictures[0].Data.Data))
+                {
+                    var bitmap = new Bitmap(ms);
+
+                    art = bitmap;
+                }
+            }
+
             TrackMinimalMetadata track = new TrackMinimalMetadata
             {
                 TrackName = $"{file.Tag.Title}",
                 Artists = file.Tag.AlbumArtists,
                 FilePath = filePath,
+                CoverImage = art != null ? art.CreateScaledBitmap(new(64,64), BitmapInterpolationMode.HighQuality) : null,
                 Duration = timeSpan
             };
 

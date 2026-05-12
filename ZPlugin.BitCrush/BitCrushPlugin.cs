@@ -13,7 +13,7 @@ namespace ZPlugin.BitCrush
 
         public string Version => "1.0.0";
 
-        public int BitDepth = 3;
+        public int BitDepth = 8;
         
         public int SampleHold = 5;
 

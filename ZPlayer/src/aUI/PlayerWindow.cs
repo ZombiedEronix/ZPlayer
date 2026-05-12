@@ -1,10 +1,14 @@
-﻿using Avalonia;
+﻿using AudioPlayer.Tags;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using AudioPlayer.Tags;
+using System.Diagnostics;
+using ZPlayer.AudioEngine;
 namespace AudioPlayer.AvaloniaApp
 {
     public partial class PlayerWindow : Window
@@ -25,6 +29,12 @@ namespace AudioPlayer.AvaloniaApp
         public PlayerWindow()
         {
             InitializeComponent();
+
+
+            TitleBar.PointerPressed += (s,e) =>
+            {
+                this.BeginMoveDrag(e);
+            };
 
             background = this.FindControl<Image>("BackgroundImage");
             imageControl = this.FindControl<Image>("AlbumArt");
@@ -160,6 +170,33 @@ namespace AudioPlayer.AvaloniaApp
         {
             timer.Stop();
             player.Stop();
+        }
+
+        private void OnPlaylistDragOver(object? sender, DragEventArgs e)
+        {
+            if (e.DataTransfer.Formats.Contains(DataFormat.File))
+            {
+                e.DragEffects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.DragEffects = DragDropEffects.None;
+            }
+        }
+
+        private void OnPlaylistDrop(object? sender, DragEventArgs e)
+        {
+            var items = e.DataTransfer.TryGetFiles();
+
+                foreach (var item in items)
+                {
+                    string? filePath = item.Path.LocalPath;
+
+                    if (!string.IsNullOrEmpty(filePath))
+                    {
+                        player.AddTrackInPlaylist(filePath);
+                    }
+            }
         }
 
         private void Next(object? sender, RoutedEventArgs e)

@@ -11,6 +11,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+	<ItemGroup>
+		<AvaloniaResource Include="*.png;*.svg;src/*.png;src/*.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AvaloniaResource Include="Assets\logo.svg" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="12.0.2" />
     <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />

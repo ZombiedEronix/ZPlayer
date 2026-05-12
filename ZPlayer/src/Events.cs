@@ -1,5 +1,6 @@
 using AudioPlayer.API;
 using DiscordRPC;
+using ZPlayer.AudioEngine;
 
 namespace AudioPlayer
 {

@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).exe"
+		DestinationFolder="..\ZPlayer\bin\Release\net10.0-windows\win-x64\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).exe"
+DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
+		<Copy SourceFiles="$(OutputPath)$(AssemblyName).runtimeconfig.json"
+DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
+	</Target>
+
+
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\soldier.png" />
+		<EmbeddedResource Include="Resources\zvuk-litvina.wav" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+
+</Project>

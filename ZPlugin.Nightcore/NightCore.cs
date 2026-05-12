@@ -4,17 +4,11 @@ namespace ZPlugin.Nightcore
     public class NightCore : IZPlugin
     {
         public float Speed { get; set; } = 1;
-
         public bool Interpolation { get; set; } = true;
-
         public string Name => "NightCore plugin";
-
         public string Author => "ZombiedEronix";
-
         public string Description => "A nightcore plugin for audio processing";
-
         public string Version => "1.0.0";
-
         public bool isEnabled { get; set; } = true;
 
         public int GetRequiredInput(int outputCount, int channels)

@@ -1,13 +1,14 @@
+using AudioPlayer;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System.Reflection;
 using ZPlugin.Interface;
 
-namespace AudioPlayer
+namespace ZPlayer.AudioEngine
 {
     public class NAudioEngine : IAudioEngine
     {
-        WaveOutEvent waveOut;
+        IWavePlayer waveOut;
         AudioFileReader reader;
 
 
@@ -41,11 +42,12 @@ namespace AudioPlayer
             }
         }
 
+
         bool isInitialized;
         private bool _isSeeking;
         public NAudioEngine()
         {
-            waveOut = new();
+            waveOut = new WaveOutEvent();
             LoadPlugins();
         }
 
