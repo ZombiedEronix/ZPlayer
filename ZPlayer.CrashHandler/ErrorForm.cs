@@ -10,7 +10,7 @@ namespace CrashHandler
             InitializeComponent();
             if(string.IsNullOrEmpty(message)) message = "TestException.";
             if(string.IsNullOrEmpty(stackTrace)) stackTrace = "Стек вызовов не доступен.";
-            ReasonText.Text = $"Конкретная причина остановки\n{message}";
+            ReasonText.Text = $"Конкретная причина остановки : {message}";
             textBox1.Text = stackTrace;
         }
 

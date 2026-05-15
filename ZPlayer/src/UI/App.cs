@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using ZPlayer.AudioEngine;
 namespace AudioPlayer.AvaloniaApp
 {
     public partial class App : Avalonia.Application
@@ -26,9 +27,10 @@ namespace AudioPlayer.AvaloniaApp
                 if (desktop.Args != null && desktop.Args.Length == 1)
                 {
                     string filePath = desktop.Args[0];
-                    Program.player.AddTrackInPlaylist(filePath);
-                    Program.player.Play();
+                    Player.Get().AddTrackInPlaylist(filePath);
+                    Player.Get().Play();
                 }
+                desktop.MainWindow.AttachDevTools();
 
             }
 

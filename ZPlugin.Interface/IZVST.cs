@@ -1,6 +1,6 @@
 ﻿namespace ZPlugin.Interface
 {
-    public interface IZPlugin
+    public interface IZVST
     {
         string Name { get; }
         string Author { get; }

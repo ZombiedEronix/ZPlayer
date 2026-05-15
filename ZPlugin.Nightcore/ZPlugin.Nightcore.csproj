@@ -1,16 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).dll"
-			DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\plugins\" />
+	<Target Name="CustomCopy" AfterTargets="PostBuildEvent">
+		<ItemGroup>
+			<PluginFiles Include="$(TargetDir)**\*.*" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(PluginFiles)" DestinationFolder="..\ZPlayer\bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\plugins" SkipUnchangedFiles="true" />
 	</Target>
 
 	<ItemGroup>

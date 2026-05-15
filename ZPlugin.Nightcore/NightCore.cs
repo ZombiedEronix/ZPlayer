@@ -1,7 +1,7 @@
 ﻿using ZPlugin.Interface;
 namespace ZPlugin.Nightcore
 {
-    public class NightCore : IZPlugin
+    public class NightCore : IZVST
     {
         public float Speed { get; set; } = 1;
         public bool Interpolation { get; set; } = true;

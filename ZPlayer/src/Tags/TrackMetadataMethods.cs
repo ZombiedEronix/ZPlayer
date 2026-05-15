@@ -2,14 +2,25 @@ using Avalonia.Media.Imaging;
 
 namespace AudioPlayer.Tags
 {
-
     public static class TrackMetadataMethods
     {
         public static TrackMinimalMetadata GetTrack(string filePath)
         {
+            var extension = Path.GetExtension(filePath).ToLower();
+
+            if (!_supportedExtensions.Contains(extension))
+            {
+                return new()
+                {
+                    TrackName = Path.GetFileNameWithoutExtension(filePath),
+                    Artists = Array.Empty<string>(),
+                    FilePath = filePath,
+                };
+            }
+
             var file = TagLib.File.Create(filePath);
             TimeSpan timeSpan = file.Properties.Duration;
-            
+
 
             Bitmap art = null;
 
@@ -28,16 +39,29 @@ namespace AudioPlayer.Tags
                 TrackName = $"{file.Tag.Title}",
                 Artists = file.Tag.AlbumArtists,
                 FilePath = filePath,
-                CoverImage = art != null ? art.CreateScaledBitmap(new(64,64), BitmapInterpolationMode.HighQuality) : null,
+                CoverImage = art != null ? art.CreateScaledBitmap(new(64, 64), BitmapInterpolationMode.HighQuality) : null,
                 Duration = timeSpan
             };
 
             return track;
         }
 
+        private static string[] _supportedExtensions = { ".mp3", ".wav", ".flac", ".ogg", ".m4a" };
         public static TrackFullMetadata GetMetaData(this TrackMinimalMetadata track)
         {
+            var extension = Path.GetExtension(track.FilePath).ToLower();
+
+            if (!_supportedExtensions.Contains(extension))
+            {
+                return new()
+                {
+                    Title = Path.GetFileNameWithoutExtension(track.FilePath),
+                    FilePath = track.FilePath,
+                };
+            }
+
             TagLib.File file;
+
             try
             {
                 file = TagLib.File.Create(track.FilePath);

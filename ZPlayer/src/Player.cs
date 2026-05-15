@@ -1,9 +1,11 @@
 using AudioPlayer.Tags;
+using ZPlayer.src.Engine;
 namespace ZPlayer.AudioEngine
 {
     public class Player
     {
-        public readonly IAudioEngine engine = new NAudioEngine();
+        static Player instance;
+        public readonly IAudioEngine engine = new CSCoreEngine();
         List<TrackMinimalMetadata> tracksList = new();
 
         public TrackFullMetadata CurrentTrackMetadata { get; private set; }
@@ -11,11 +13,11 @@ namespace ZPlayer.AudioEngine
         public event Action PlaybackStarted;
         public event Action FileOpened;
         public event Action PlaybackStopped;
-
         public event Action PlaylistUpdated;
 
-
         private int trackNumber;
+        internal bool IsPlaying;
+
         public int TrackNumber
         {
             get => trackNumber;
@@ -45,6 +47,7 @@ namespace ZPlayer.AudioEngine
         public void Next()
         {
             TrackNumber++;
+            Stop();
             OpenAudioFile();
             Play();
         }
@@ -52,6 +55,7 @@ namespace ZPlayer.AudioEngine
         public void Prev()
         {
             TrackNumber--;
+            Stop();
             OpenAudioFile();
             Play();
         }
@@ -59,6 +63,8 @@ namespace ZPlayer.AudioEngine
         public void Stop()
         {
             engine.Stop();
+            IsPlaying = false;
+
             PlaybackStopped?.Invoke();
         }
 
@@ -66,14 +72,24 @@ namespace ZPlayer.AudioEngine
         {
             if (!engine.IsInitialized)
             {
-                engine.InitializeAudio();
                 if (TracksList.Count > 0)
                 {
                     OpenAudioFile();
                 }
             }
-            engine.Play();
-            PlaybackStarted?.Invoke();
+
+            if(!IsPlaying)
+            {
+                engine.Play();
+                IsPlaying = true;
+                PlaybackStarted?.Invoke();
+            }
+            else
+            {
+                engine.Pause();
+                IsPlaying = false;
+                PlaybackStopped?.Invoke();
+            }
         }
 
         public void AddTrackInPlaylist(string file)
@@ -101,5 +117,13 @@ namespace ZPlayer.AudioEngine
             trackNumber = 0;
             TracksList.Clear();
         }
+
+        internal static Player Get()
+        {
+            if (instance == null) throw new Exception("Player is not initialized!");
+            return instance;
+        }
+
+        internal static Player Initialize() => instance = new();
     }
 }

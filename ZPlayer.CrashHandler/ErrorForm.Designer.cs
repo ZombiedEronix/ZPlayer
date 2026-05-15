@@ -48,7 +48,7 @@
             panel1.Controls.Add(icon);
             panel1.Location = new Point(12, 12);
             panel1.Name = "panel1";
-            panel1.Size = new Size(560, 129);
+            panel1.Size = new Size(824, 129);
             panel1.TabIndex = 0;
             // 
             // ReasonText
@@ -76,7 +76,7 @@
             Title.AutoSize = true;
             Title.Location = new Point(101, 26);
             Title.Name = "Title";
-            Title.Size = new Size(259, 30);
+            Title.Size = new Size(256, 30);
             Title.TabIndex = 1;
             Title.Text = "При работе программы возникла проблема.\r\n\r\n";
             // 
@@ -98,7 +98,7 @@
             groupBox1.ForeColor = SystemColors.ControlText;
             groupBox1.Location = new Point(12, 147);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(560, 284);
+            groupBox1.Size = new Size(830, 284);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Стек вызовов";
@@ -110,7 +110,8 @@
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
-            textBox1.Size = new Size(548, 256);
+            textBox1.ScrollBars = ScrollBars.Vertical;
+            textBox1.Size = new Size(818, 256);
             textBox1.TabIndex = 0;
             // 
             // ErrorForm
@@ -118,7 +119,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlDark;
-            ClientSize = new Size(584, 443);
+            ClientSize = new Size(854, 445);
             Controls.Add(groupBox1);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedDialog;

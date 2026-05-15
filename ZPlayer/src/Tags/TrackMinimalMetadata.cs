@@ -5,14 +5,11 @@ namespace AudioPlayer.Tags
 {
     public struct TrackMinimalMetadata
     {
-
         public string TrackName { get; set; }
         public string[] Artists { get; set; }
         public TimeSpan Duration { get; set; }
         public Bitmap? CoverImage { get; set; }
         public string FilePath { get; set; }
-
-
         public string DurationDisplay
         {
             get

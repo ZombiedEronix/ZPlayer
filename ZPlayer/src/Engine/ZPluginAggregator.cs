@@ -1,34 +1,32 @@
-﻿using NAudio.Wave;
+﻿using CSCore;
 using ZPlugin.Interface;
 
 namespace ZPlayer.AudioEngine
 {
-    public class PluginSampleProvider : ISampleProvider
+    public class ZPluginAggregator : SampleAggregatorBase
     {
-        public readonly ISampleProvider source;
-        public List<IZPlugin> plugins;
-        public PluginSampleProvider(ISampleProvider source, List<IZPlugin> plugins)
+        private readonly List<IZVST> plugins;
+
+        public ZPluginAggregator(ISampleSource source, List<IZVST> plugins) : base(source)
         {
-            this.source = source;
+            base.BaseSource = source;
             this.plugins = plugins;
         }
 
-        public WaveFormat WaveFormat => source.WaveFormat;
-
-        public int Read(float[] buffer, int offset, int count)
+        public override int Read(float[] buffer, int offset, int count)
         {
             int required = count;
             for (int i = plugins.Count - 1; i >= 0; i--)
             {
                 if(plugins[i].isEnabled)
                 {
-                    required = plugins[i].GetRequiredInput(required, source.WaveFormat.Channels);
+                    required = plugins[i].GetRequiredInput(required, base.WaveFormat.Channels);
                 }
             }
 
             float[] current = new float[required];
 
-            int read = source.Read(current, 0, required);
+            int read = base.Read(current, 0, required);
 
             if (read == 0) return count;
 
@@ -36,10 +34,10 @@ namespace ZPlayer.AudioEngine
             {
                 if (plugin.isEnabled)
                 {
-                    int outputSize = plugin.GetOutputSize(current.Length, source.WaveFormat.Channels);
+                    int outputSize = plugin.GetOutputSize(current.Length, base.WaveFormat.Channels);
                     float[] outputData = new float[outputSize];
 
-                    plugin.Process(current, outputData, source.WaveFormat.Channels);
+                    plugin.Process(current, outputData, base.WaveFormat.Channels);
 
                     current = outputData;
                 }

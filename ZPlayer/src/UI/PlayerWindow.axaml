@@ -1,0 +1,268 @@
+<Window
+xmlns="https://github.com/avaloniaui"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+x:Class="AudioPlayer.AvaloniaApp.PlayerWindow"
+xmlns:tags="clr-namespace:AudioPlayer.Tags"
+Title="ZPlayer"
+Width="920"
+MinWidth="920"
+MinHeight="620"
+Height="920"
+SystemDecorations="None"
+TransparencyLevelHint="Transparent"
+Background="Transparent"
+WindowStartupLocation="CenterScreen"
+>
+
+    <Border CornerRadius="20"
+            Background="#FA2D2D2D"
+            ClipToBounds="True">
+        <Grid>
+            <Border Name="TitleBar" Height="40" VerticalAlignment="Top" Background="Transparent">
+                <Grid ColumnDefinitions="*, Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="ZPlayer"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="10,0"/>
+
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button Grid.Column="1"
+                                Content="-"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="MinimizeWindow"
+                                VerticalAlignment="Center"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="1"
+                                Content="█"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="MaximazeWindow"
+                                VerticalAlignment="Center"
+                                Margin="0,0,10,0"/>
+
+                        <Button Grid.Column="1"
+                                Content="X"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Click="CloseWindow"
+                                VerticalAlignment="Center"
+                                Margin="0,0,10,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Image Name="BackgroundImage"
+                   Stretch="UniformToFill"
+                   IsHitTestVisible="False"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Opacity="0.6">
+                <Image.Effect>
+                    <BlurEffect Radius="100" />
+                </Image.Effect>
+            </Image>
+
+            <Grid RowDefinitions="*" ColumnDefinitions="*, 450" Margin="10,20,10,10">
+
+                <Grid
+                Grid.Column="0"
+                RowDefinitions="*,Auto,Auto,Auto"
+                ColumnDefinitions="*">
+
+                    <!-- Обложка -->
+                    <Grid Width="450" Height="450">
+                        <Border CornerRadius="50" Background="#2D2D2D" Margin="20,40,20,20" />
+
+                        <Border CornerRadius="50"
+                                BoxShadow="0 10 35 5 #FF000000"
+                                Margin="20,40,20,20"
+                                ClipToBounds="True">
+                            <Panel>
+                                <Image Name="AlbumArt" Stretch="UniformToFill" />
+
+                                <Border VerticalAlignment="Bottom" Height="120">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                                            <GradientStop Offset="0" Color="#00000000" />
+                                            <GradientStop Offset="1" Color="#CC000000" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <StackPanel VerticalAlignment="Bottom"
+                                            Margin="20"
+                                            Spacing="2">
+                                    <TextBlock Name="Title_Txt"
+                                               HorizontalAlignment="Center"
+
+                                               Text="Title"
+                                               TextTrimming="CharacterEllipsis"
+                                               FontWeight="Bold"
+                                               FontSize="22"
+                                               Foreground="White" />
+                                    <TextBlock Name="Artist_Txt"
+                                               Text="Artist"
+                                               TextTrimming="CharacterEllipsis"
+                                               HorizontalAlignment="Center"
+                                               FontSize="14"
+                                               Foreground="#CCCCCC" />
+                                </StackPanel>
+                            </Panel>
+                        </Border>
+                    </Grid>
+                    <!-- ======= -->
+
+                    <!-- Прогресс -->
+                    <StackPanel Spacing="5" Width="400" Grid.Row="2" VerticalAlignment="Center">
+                        <Slider Name="ProgressSlider"
+                                Margin="10,10"
+                                Foreground="White"
+                                Minimum="0" Maximum="100" Value="20">
+                            <Slider.Styles>
+                                <Style Selector="Slider /template/ Thumb">
+                                    <Setter Property="Template">
+                                        <ControlTemplate>
+                                            <Border Width="16"
+                                                    Height="16"
+                                                    Background="White"
+                                                    CornerRadius="8">
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter>
+                                </Style>
+                                <Style Selector="Slider /template/ RepeatButton#PART_SelectionRangePrevTrack">
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="Height" Value="4" />
+                                </Style>
+                                <Style Selector="Slider /template/ RepeatButton#PART_SelectionRangeNextTrack">
+                                    <Setter Property="Background" Value="#55FFFFFF" />
+                                    <Setter Property="Height" Value="4" />
+                                </Style>
+                            </Slider.Styles>
+                        </Slider>
+
+                        <Grid>
+                            <TextBlock Name="CurrentTime_Txt" Text="0:13" FontSize="12" Foreground="White" HorizontalAlignment="Left" Opacity="0.7"/>
+                            <TextBlock Name="Duration_Txt" Text="3:14" FontSize="12" Foreground="White" HorizontalAlignment="Right" Opacity="0.7"/>
+                        </Grid>
+                    </StackPanel>
+                    <!-- ======= -->
+
+                    <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal"
+                                HorizontalAlignment="Center" Spacing="10">
+
+                        <Button Name="PrevBtn" Click="Prev" Background="Transparent"
+                                CornerRadius="20">
+                            <PathIcon Data="M18,6L9.5,12L18,18V6M8,18V6H6V18H8Z"
+                                      Foreground="White" Width="25" Height="25" />
+                        </Button>
+
+                        <Button Name="PlayBtn" Click="Play" Background="Transparent"
+                                CornerRadius="20">
+                            <PathIcon Data="M6,19L19,12L6,5V19Z" Foreground="White" Width="25"
+                                      Height="25" />
+                        </Button>
+
+                        <Button Name="NextBtn" Background="Transparent" Click="Next"
+                                CornerRadius="20">
+                            <PathIcon Data="M6,18L14.5,12L6,6V18M16,6V18H18V6H16Z"
+                                      Foreground="White" Width="25" Height="25" />
+                        </Button>
+                        <Slider Name="VolumeSlider" Value="100"
+                                Foreground="White" Background="White"
+                                ValueChanged="SetVolume" Width="100"
+                                HorizontalAlignment="Right" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1" Margin="20,20,20,20" Background="Transparent" RowDefinitions="*,Auto">
+                    <Border DragDrop.AllowDrop="True">
+
+                        <ListBox Name="playlist"
+                                 Background="#20ffffff"
+                                 Padding="25"
+                                 CornerRadius="50"
+                                 Grid.Row="0"
+                                 DoubleTapped="OnUserDoubleTapToTrack">
+
+
+                            <ListBox.Styles>
+                                <Style Selector="ListBox">
+
+                                </Style>
+
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="CornerRadius" Value="8" />
+                                    <Setter Property="Padding" Value="12,8" />
+                                    <Setter Property="Margin" Value="4,2" />
+                                </Style>
+
+                                <Style
+                                Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Style>
+
+                                <Style
+                                Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Style>
+
+                                <Style
+                                Selector="ListBoxItem:selected:not(:focus) /template/ ContentPresenter#PART_ContentPresenter">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Style>
+
+                                <Style Selector="ListBox ScrollViewer">
+                                    <Setter Property="OpacityMask">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,92%">
+                                                <GradientStop Offset="0" Color="Transparent" />
+                                                <GradientStop Offset="0.1" Color="Black" />
+                                                <GradientStop Offset="0.9" Color="Black" />
+                                                <GradientStop Offset="1" Color="Transparent" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+
+
+                            </ListBox.Styles>
+
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="tags:TrackMinimalMetadata">
+                                    <Grid ColumnDefinitions="Auto,*, Auto" Margin="5">
+                                        <Border Grid.Column="0" Width="62" Height="62" ClipToBounds="true" CornerRadius="16" Margin="0,0,30,0">
+                                            <Image Source="{Binding CoverImage}" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center"
+                                                    >
+                                            <TextBlock Text="{Binding TrackDisplay}" FontWeight="Bold"
+                                                       TextTrimming="CharacterEllipsis" Foreground="White"
+                                                       Margin="0,0,10,0" />
+                                            <TextBlock Text="{Binding ArtistDisplay}" FontSize="12" FontWeight="Medium"
+                                                       TextTrimming="CharacterEllipsis" Foreground="White" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="2" Text="{Binding DurationDisplay}"
+                                                   Foreground="White" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+                    <StackPanel Grid.Row="0" VerticalAlignment="Bottom" Margin="0,10" Background="Transparent">
+                        <Button Name="AddFileBtn" Background="Transparent" Click="SelectFiles" Content="Add Files" HorizontalAlignment="Center"
+                                CornerRadius="20">
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

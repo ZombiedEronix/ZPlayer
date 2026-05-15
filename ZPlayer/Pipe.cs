@@ -2,6 +2,7 @@ using AudioPlayer.AvaloniaApp;
 using Avalonia;
 using System.Diagnostics;
 using System.IO.Pipes;
+using ZPlayer.AudioEngine;
 namespace AudioPlayer;
 
 internal static partial class Program
@@ -56,15 +57,26 @@ internal static partial class Program
 
                         Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                         {
+                            Player player = Player.Get();
+
+                            player.ClearPlaylist();
+                            player.Stop();
+                            foreach(var filepath in pathsToLoad)
+                            {
+                                player.AddTrackInPlaylist(filepath);
+                            }
+                            player.Play();
+
+
                             var app = (App)Application.Current;
                             if (app?.playerWindow == null) return;
 
-                            player.ClearPlaylist();
+                            Player.Get().ClearPlaylist();
                             app.playerWindow.Stop();
 
                             foreach (var filePath in pathsToLoad)
                             {
-                                player.AddTrackInPlaylist(filePath);
+                                Player.Get().AddTrackInPlaylist(filePath);
                             }
 
                             app.playerWindow.Play(null, null);

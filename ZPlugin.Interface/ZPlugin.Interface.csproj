@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
-  </Target>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.1.0" />
+	</ItemGroup>
+
+	<Target Name="CustomCopy" AfterTargets="Build">
+		<Copy SourceFiles="@(MySourceFiles)" DestinationFolder="..\ZPlayer\bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\" SkipUnchangedFiles="true" />
+	</Target>
 </Project>

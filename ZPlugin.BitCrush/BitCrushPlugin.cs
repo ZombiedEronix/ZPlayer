@@ -3,7 +3,7 @@ using ZPlugin.Interface;
 
 namespace ZPlugin.BitCrush
 {
-    public class BitCrushPlugin : IZPlugin
+    public class BitCrushPlugin : IZVST
     {
         public string Name => "BitCrush";
 

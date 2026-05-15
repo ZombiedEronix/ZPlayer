@@ -1,24 +1,42 @@
 using AudioPlayer.AvaloniaApp;
 using Avalonia;
 using System.Diagnostics;
-using System.Windows.Forms;
 using ZPlayer.AudioEngine;
-namespace AudioPlayer;
-
-internal static partial class Program
+namespace AudioPlayer
 {
-    public static Player player;
-    [STAThread]
-    public static void Main(string[] args)
+    internal static partial class Program
     {
-        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        [STAThread]
+        public static void Main(string[] args)
         {
-            var ex = (Exception)e.ExceptionObject;
+            if (Pipe.StartPipeClient(args)) return;
+            Task.Run(() => Pipe.StartPipeServer("ZPlayer"));
+            
+            Player.Initialize();
+            MediaKeyControl.Initialize(Player.Get());
+            DiscordPresence.Initialize();
+            Plugins.LoadPlugins();
 
+
+
+            //====================
+            ConnectCrashHandler();
+            try
+            {
+                BuildAvaloniaApp().LogToTrace().StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception ex)
+            {
+                ExecuteCrashHandler(ex);
+            }
+            //====================
+        }
+
+        public static void ExecuteCrashHandler(Exception ex)
+        {
             string errorArgs = $"\"{ex.Message}\" \"{ex.StackTrace}\"";
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string exePath = Path.Combine(baseDir, "ZPlayerCrashHandler.exe");
-
             try
             {
                 Process.Start(new ProcessStartInfo
@@ -28,27 +46,32 @@ internal static partial class Program
                     UseShellExecute = true
                 });
             }
-            catch {MessageBox.Show("Не удалось запустить обработчик сбоев.");}
-            Environment.Exit(1);
-        };
+            catch { Environment.Exit(1); }
+        }
 
-        if (Pipe.StartPipeClient(args)) return;
-        Task.Run(() => Pipe.StartPipeServer("ZPlayer"));
+        public static void ConnectCrashHandler()
+        {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                var ex = (Exception)e.ExceptionObject;
+                ExecuteCrashHandler(ex);
+                Environment.Exit(1);
+            };
 
-        //===============================
-        player = new();
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                var ex = (Exception)e.Exception;
+                ExecuteCrashHandler(ex);
+                Environment.Exit(1);
+            };
+        }
 
-        player.FileOpened += Events.OnStartPlayBack;
-
-        //===============================
-        BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
-    }
-
-    public static AppBuilder BuildAvaloniaApp()
-    {
-        return AppBuilder.Configure<App>()
-                         .UsePlatformDetect()
-                         .LogToTrace();
+        public static AppBuilder BuildAvaloniaApp()
+        {
+            return AppBuilder.Configure<App>()
+                             .UseWin32()
+                             .UseSkia()
+                             .LogToTrace();
+        }
     }
 }

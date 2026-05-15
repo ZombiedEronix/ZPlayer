@@ -2,23 +2,23 @@
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net10.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).exe"
-		DestinationFolder="..\ZPlayer\bin\Release\net10.0-windows\win-x64\" />
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).exe"
-DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
-		<Copy SourceFiles="$(OutputPath)$(AssemblyName).runtimeconfig.json"
-DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
+	<ItemGroup>
+		<MySourceFiles Include="$(OutputPath)$(AssemblyName).exe;$(OutputPath)$(AssemblyName).dll;$(OutputPath)$(AssemblyName).runtimeconfig.json" />
+	</ItemGroup>
+
+	<Target Name="CustomCopy" AfterTargets="Build">
+		<Copy SourceFiles="@(MySourceFiles)" DestinationFolder="..\ZPlayer\bin\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\" SkipUnchangedFiles="true" />
 	</Target>
 
 
 	<ItemGroup>
+		<EmbeddedResource Include="Resources\drowning_love.mid" />
 		<EmbeddedResource Include="Resources\soldier.png" />
 		<EmbeddedResource Include="Resources\zvuk-litvina.wav" />
 
@@ -37,6 +37,10 @@ DestinationFolder="..\ZPlayer\bin\Debug\net10.0-windows\win-x64\" />
 			<Generator>ResXFileCodeGenerator</Generator>
 			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="NAudio" Version="2.3.0" />
 	</ItemGroup>
 
 </Project>

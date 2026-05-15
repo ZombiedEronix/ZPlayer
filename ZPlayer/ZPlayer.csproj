@@ -2,13 +2,10 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Nullable>enable</Nullable>
-    <PublishSingleFile>true</PublishSingleFile>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	  <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+
+	  <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -16,15 +13,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AvaloniaXaml Remove="src\UI\Themes\ZETheme.axaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <AvaloniaResource Include="Assets\logo.svg" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Svg.Skia" Version="11.3.0" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.2" />
+    <PackageReference Include="Avalonia" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Svg.Skia" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.1.0" />
+    <PackageReference Include="Avalonia.Win32" Version="11.1.0" />
+    <PackageReference Include="CSCore" Version="1.2.1.2" />
     <PackageReference Include="DiscordRichPresence" Version="1.6.1.70" />
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
